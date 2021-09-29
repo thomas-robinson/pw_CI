@@ -3,4 +3,4 @@
 
 sudo yum install -y singularity
 cd /lustre/build_2021.2
-make -j 2 check
+make -j 2 check |& tee log.compile
