@@ -1,28 +1,34 @@
 #!/bin/sh -x
-
-buildDir=/shared/build_2018/${1}
-logdir=/contrib/2018/${1}
-
-mkdir -p ${buildDir}
-mkdir -p ${logdir}
-
+buildRoot=/contrib/intel_2018_fms
+## figure out directories and what you are cloning
 if [ -z "$1" ]
   then
     echo "No branch supplied; using main"
-    branch=main
+    buildDir=${buildRoot}/main_`date +%s`
   else
-    echo Branch is ${1}
-    branch=${1}
+    echo Setting up directory ${buildRoot}/${1}
+    buildDir=${buildRoot}/${1}
 fi
-#clone FMS
+logdir=${buildDir}/log
+mkdir -p ${buildDir}/build
+mkdir -p ${logdir}
 cd ${buildDir}
-###### Move if statement here
-git clone -b ${branch} https://github.com/NOAA-GFDL/FMS.git |& tee ${logdir}/clone.log
-
-# Set up build
-mkdir build && cd build
-autoreconf -i ../FMS/configure.ac ## tee this to a log
+## Clone FMS
+if [ -z "$1" ]
+  then
+    echo "Cloning main branch"
+    git clone https://github.com/NOAA-GFDL/FMS.git |& tee ${logdir}/clone.log
+  else
+    echo Merge in PR
+   git clone https://github.com/NOAA-GFDL/FMS.git |& tee ${logdir}/clone.log
+   # Merge the PR
+   cd FMS && git fetch origin ${1} && git merge FETCH_HEAD |& tee ${logdir}/fetch.log
+ 
+fi
+## Set up the build environment
+set echo off
 module load intel/18.0.5.274 impi/2018.4.274 netcdf/4.6.1 && export INTEL_LICENSE_FILE=27009@noaa-license.parallel.works
+set echo on
 
 export CC=`which mpiicc`
 export FC=`which mpiifort`
@@ -30,6 +36,12 @@ export CPPFLAGS="`nc-config --cflags` `nc-config --fflags`"
 export LIBS="`nc-config --libs` `nc-config --flibs`"
 export LDFLAGS="`nc-config --libs` `nc-config --flibs`"
 export MPI_LAUNCHER="`which srun` --mpi=pmi2"
-../FMS/configure # tee this to a log
+
+## Build FMS
+mkdir -p ${buildDir}/build
+autoreconf -i ${buildDir}/FMS/configure.ac |& tee ${logdir}/autoreconf.log 
+${buildDir}/FMS/configure |& tee ${logdir}/configure.out 
 ## copy the config.log to the logdir
-make check |& tee ${logdir}/compile.log 
+cp config.log ${logdir}/config.log
+## Run make
+make |& tee ${logdir}/compile.log
