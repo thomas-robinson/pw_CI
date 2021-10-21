@@ -9,6 +9,7 @@ if [ -z "$1" ]
     echo Setting up directory ${buildRoot}/${1}
     buildDir=${buildRoot}/${1}
 fi
+rm -rf ${buildDir}
 logdir=${buildDir}/log
 mkdir -p ${buildDir}/build
 mkdir -p ${logdir}
@@ -38,7 +39,7 @@ export LDFLAGS="`nc-config --libs` `nc-config --flibs`"
 export MPI_LAUNCHER="`which srun` --mpi=pmi2"
 
 ## Build FMS
-mkdir -p ${buildDir}/build
+mkdir -p ${buildDir}/build && cd ${buildDir}/build
 autoreconf -i ${buildDir}/FMS/configure.ac |& tee ${logdir}/autoreconf.log 
 ${buildDir}/FMS/configure |& tee ${logdir}/configure.out 
 ## copy the config.log to the logdir

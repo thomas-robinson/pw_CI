@@ -10,7 +10,7 @@ if [ -z "$1" ]
     echo Branch is ${1}
     branch=${1}
 fi
- topDir=/lustre/am4_build
+ topDir=/contrib/am4_build/intel2021/${branch}
 
 export LANG=en_US.utf8
 export LC_ALL=en_US.utf8

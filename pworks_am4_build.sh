@@ -5,7 +5,10 @@
 #SBATCH --time=03:45:00               # Time limit hrs:min:sec
 #SBATCH --output=/lustre/build_am4_%j.log   # Standard output and error log
 
-export INTEL_LICENSE_FILE=27009@noaa-license.parallel.works
+ module purge
+ module load intel impi netcdf hdf5
+ export INTEL_LICENSE_FILE=27009@noaa-license.parallel.works
+
 export CC=`which mpiicc`
 export FC=`which mpiifort`
 
@@ -17,12 +20,13 @@ export FC=`which mpiifort`
     echo Branch is ${1}
     branch=${1}
  fi
- topDir=/lustre/am4_build
 
- mkdir -p ${topDir} 
- module load intel impi netcdf hdf5
+ topDir=/contrib/am4_build/${2}
+ mkdir -p ${topDir}
+
 ## Build the AM4 from github
  cd ${topDir}
+ sleep 5
  git clone --recursive https://github.com/NOAA-GFDL/AM4.git -b ${branch}
 ## Update source code to main branch
      cd ${topDir}/AM4/src/FMS
