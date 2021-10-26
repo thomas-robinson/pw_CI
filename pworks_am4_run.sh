@@ -4,6 +4,7 @@
 #SBATCH --ntasks=24
 #SBATCH --time=03:45:00               # Time limit hrs:min:sec
 #SBATCH --output=/lustre/run_am4_%j.log   # Standard output and error log
+set -o pipefail
 
 #cd /lustre/AM4_run
  module load intel impi netcdf hdf5

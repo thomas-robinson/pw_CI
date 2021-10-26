@@ -1,4 +1,5 @@
-#!/bin/bash -x
+#!/bin/bash -xe
+set -o pipefail
 
 timestamp=`date +%s`
 runDirRoot=/contrib/am4_build/${timestamp}

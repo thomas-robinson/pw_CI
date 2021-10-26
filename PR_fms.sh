@@ -1,10 +1,9 @@
-#!/bin/sh -x
+#!/bin/sh -xe
 #SBATCH --job-name=FMS_container
 #SBATCH --nodes=2
 #SBATCH --ntasks=4
 #SBATCH --time=00:15:00               # Time limit hrs:min:sec
 #SBATCH --output=FMS_container_%j.log   # Standard output and error log
-
 intelVersion=2021.2
 container=/contrib/intel${intelVersion}_netcdfc4.7.4_ubuntu.sif
 
@@ -30,8 +29,11 @@ cd FMS && git fetch origin ${1} && git merge FETCH_HEAD |& tee ${logdir}/fetch.l
 # Set up build
 cd ${buildDir}/build
 #Build FMS
+set -o pipefail
 singularity exec -B /lustre,/contrib ${container} autoreconf -i ${buildDir}/FMS/configure.ac |& tee ${logdir}/contreconf.log
+set -o pipefail
 singularity exec -B /lustre,/contrib ${container} ${buildDir}/FMS/configure --prefix=${buildDir}/build FC=mpiifort CC="mpiicc -no-multibyte-chars" CPPFLAGS="-L/opt/netcdf-fortran/lib -lnetcdff -I/opt/netcdf-fortran/include -I/opt/netcdf-fortran/include -I/opt/netcdf-c/include -I/opt/hdf5/include -I/include -L/opt/netcdf-c/lib -lnetcdf" LIBS="-L/opt/netcdf-fortran/lib -lnetcdff -L/opt/netcdf-c/lib -lnetcdf" |& tee ${logdir}/configrun.log
 cp config.log ${logdir}/config.log 
 # Run the build
+set -o pipefail
 singularity exec -B /lustre,/contrib ${container} /contrib/make_fms_container_pr.sh ${buildDir}/build |& tee ${logdir}/make_fms_container.log

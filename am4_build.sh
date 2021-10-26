@@ -1,4 +1,5 @@
 #!/bin/bash -x
+set -o pipefail
 
 # sudo yum install -y singularity
 

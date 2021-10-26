@@ -1,4 +1,4 @@
-#!/bin/bash -x
+#!/bin/bash -xe
 #SBATCH --job-name=test_am4
 #SBATCH --nodes=1
 ##SBATCH --ntasks-per-node=24
@@ -6,6 +6,7 @@
 #SBATCH --time=03:45:00               # Time limit hrs:min:sec
 #SBATCH --output=/lustre/test_am4_%j.log   # Standard output and error log
 
+set -o pipefail
 
 ## variables
 refDir=/contrib/reference_AM4/2021.2_c/2021.03/intel_2021.2_container

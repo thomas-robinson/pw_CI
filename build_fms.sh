@@ -1,4 +1,4 @@
-#!/bin/sh -x
+#!/bin/sh -xe
 buildRoot=/contrib/intel_2018_fms
 ## figure out directories and what you are cloning
 if [ -z "$1" ]
@@ -45,4 +45,6 @@ ${buildDir}/FMS/configure |& tee ${logdir}/configure.out
 ## copy the config.log to the logdir
 cp config.log ${logdir}/config.log
 ## Run make
+set -e
+set -o pipefail
 make |& tee ${logdir}/compile.log
