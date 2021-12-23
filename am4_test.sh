@@ -26,7 +26,8 @@ cd ${workDir}
 mkdir -p runDir/INPUT
 mkdir -p runDir/RESTART
 cd ${workDir}/runDir
-cp /contrib/AM4_run/* .
+#cp /contrib/AM4_run/* .
+find /contrib/AM4_run/ -maxdepth 1 -type f -exec cp -t . {} +
 cd INPUT
 ln -sf /contrib/AM4_run/INPUT/* .
 cd ${workDir}/runDir

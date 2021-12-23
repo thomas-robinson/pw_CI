@@ -20,7 +20,8 @@ mkdir -p $runDirRoot/runDir/RESTART
 cd $runDirRoot/runDir/INPUT
 ln -sf /contrib/AM4_run/INPUT/* .
 cd $runDirRoot/runDir
-cp /contrib/AM4_run/* $runDirRoot/runDir 
+cp /contrib/AM4_run/* $runDirRoot/runDir &
+sleep 10 
 cp /contrib/AM4_input_files/input.nml $runDirRoot/runDir
 cp /contrib/AM4_input_files/diag_table $runDirRoot/runDir
 cp ${executable} $runDirRoot/runDir
