@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/sh -xe
 
 i=1
 n=154
