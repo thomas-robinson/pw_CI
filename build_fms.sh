@@ -23,7 +23,7 @@ if [ -z "$1" ]
     echo Merge in PR
    git clone https://github.com/NOAA-GFDL/FMS.git |& tee ${logdir}/clone.log
    # Merge the PR
-   cd FMS && git fetch origin ${1}/head:toMerge && git merge toMerge |& tee ${logdir}/fetch.log
+   cd FMS && git fetch origin ${1}:toMerge && git merge toMerge |& tee ${logdir}/fetch.log
  
 fi
 ## Set up the build environment
