@@ -23,6 +23,8 @@ export LC_ALL=en_US.utf8
 ## Update source code to main branch
      cd ${topDir}/AM4/src/FMS
      git merge origin/main
+     cd ${topDir}/AM4/src/FMScoupler
+     git merge origin/main
 ## Compile AM4
      cd ${topDir}/AM4/exec
      make -j 20 HDF_INCLUDE=-I/opt/hdf5/include HDF_LIBS="-L/opt/hdf5/lib -lhdf5 -lhdf5_fortran -lhdf5_hl -lhdf5hl_fortran" SH=sh CC="`which mpiicc` -no-multibyte-chars" |& tee compile.log
